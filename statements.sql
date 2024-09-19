@@ -48,6 +48,8 @@ INSERT INTO roles (nombre_rol) VALUES
 -- Tu código aquí
 ALTER TABLE usuarios ADD COLUMN id_rol INT;
 
+ALTER TABLE usuarios ADD FOREIGN KEY (id_rol) REFERENCES roles(id_rol);
+
 UPDATE usuarios SET id_rol = 1 WHERE id_usuario = 1;
 UPDATE usuarios SET id_rol = 2 WHERE id_usuario = 2;
 UPDATE usuarios SET id_rol = 3 WHERE id_usuario = 3;
@@ -69,7 +71,6 @@ UPDATE usuarios SET id_rol = 2 WHERE id_usuario = 18;
 UPDATE usuarios SET id_rol = 1 WHERE id_usuario = 19;
 UPDATE usuarios SET id_rol = 1 WHERE id_usuario = 20;
 
-ALTER TABLE usuarios ADD FOREIGN KEY (id_rol) REFERENCES roles(id_rol);
 
 -- PASO 4
 -- Tu código aquí
@@ -103,6 +104,8 @@ ALTER TABLE usuarios ADD COLUMN id_categoria INT;
 
 -- PASO 3
 -- Tu código aquí
+ALTER TABLE usuarios ADD FOREIGN KEY (id_categoria) REFERENCES categorias(id_categoria);
+
 UPDATE usuarios SET id_categoria = 1 WHERE id_usuario IN (1, 10, 17);
 UPDATE usuarios SET id_categoria = 2 WHERE id_usuario IN (2, 6,18);
 UPDATE usuarios SET id_categoria = 3 WHERE id_usuario IN (3,20);
@@ -121,6 +124,11 @@ roles.nombre_rol,categorias.nombre_categoria
 FROM ((usuarios
 INNER JOIN roles ON usuarios.id_rol = roles.id_rol)
 INNER JOIN categorias ON usuarios.id_categoria = categorias.id_categoria);
+-- otra manera
+SELECT usuarios.id_usuario, usuarios.nombre, usuarios.apellido, usuarios.email, usuarios.edad, 
+roles.nombre_rol,categorias.nombre_categoria FROM usuarios 
+JOIN roles ON usuarios.id_rol = roles.id_rol
+JOIN categorias ON usuarios.id_categoria = categorias.id_categoria
 
 /* Relación tipo N:M */
 -- PASO 1
@@ -148,3 +156,9 @@ roles.nombre_rol,categorias.nombre_categoria
 FROM ((usuarios
 INNER JOIN roles ON usuarios.id_rol = roles.id_rol)
 INNER JOIN categorias ON usuarios.id_categoria = categorias.id_categoria);
+-- forma correcta con la tabla intermedia
+SELECT usuarios.id_usuario, usuarios.nombre, usuarios.apellido, usuarios.email, usuarios.edad, 
+roles.nombre_rol,categorias.nombre_categoria FROM usuarios 
+JOIN roles ON usuarios.id_rol = roles.id_rol
+JOIN usuarios_categorias ON usuarios.id_usuario = usuarios_categorias.id_usuario
+JOIN categorias ON usuarios_categorias.id_categoria = categorias.id_categoria
